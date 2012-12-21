@@ -40,8 +40,7 @@ public class GuiGameOver extends GUI {
 	protected void executeButton(int id) {
 		switch(id) {
 		case 0: 
-			System.out.println("started game!");
-			main.changeScreen("game", new GUIGame(main));
+			main.changeScreen("main", new GUIMainMenu(main), true);
 			break;
 		case 1:
 			main.stop();

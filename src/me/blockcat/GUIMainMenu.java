@@ -22,7 +22,7 @@ public class GUIMainMenu extends GUI {
 	@Override
 	public void initiate() {
 		this.add(new GuiButton(160, 240, "Start game!"));
-		this.add(new GuiButton(160, 300, "Help!"));
+		this.add(new GuiButton(160, 300, "Resume!"));
 		this.add(new GuiButton(160, 360, "Quit!"));
 		try {
 			URL url = this.getClass().getClassLoader().getResource("resources/images/Title.png");
@@ -51,13 +51,12 @@ public class GUIMainMenu extends GUI {
 		switch(id) {
 		case 0: 
 			System.out.println("started game!");
-			main.changeScreen("game", new GUIGame(main));
+			main.changeScreen("game", new GUIGame(main), true);
 			break;
 		case 1:
-			System.out.println("Help!");
+			main.changeScreen("game", new GUIGame(main), false);
 			break;
 		case 2:
-			System.out.println("quit!");
 			main.stop();
 		}
 	}

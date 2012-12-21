@@ -54,7 +54,7 @@ public class Main extends JFrame implements Runnable{
 		this.addKeyListener(keyListener);
 		this.addMouseListener(mouseListener);
 		
-		this.changeScreen("main", new GUIMainMenu(this));
+		this.changeScreen("main", new GUIMainMenu(this), true);
 
 		/** running = true */
 		this.running = true;
@@ -109,7 +109,13 @@ public class Main extends JFrame implements Runnable{
         System.exit(0);
     }
 	
-	public void changeScreen(String name, GUI screen) {
+	public void changeScreen(String name, GUI screen, boolean newScreen) {
+		if (newScreen) {
+			currentScreen = screen;
+			currentScreen.initiate();
+			screens.put(name, screen);
+			return;
+		}
 		if (screens.containsKey(name)) {
 			currentScreen = screens.get(name);
 			return;

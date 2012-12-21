@@ -2,6 +2,7 @@ package me.blockcat.Entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -28,9 +29,9 @@ public class EntityPlayer extends Entity{
 	public void move() {
 		super.move();
 
-		if (getSolid(Direction.DOWN) instanceof ObstacleWall) {// if standing on wall
+		if (getSolid(Direction.DOWN, false) instanceof ObstacleWall) {// if standing on wall
 			ySpeed = 0;
-			y = getSolid(Direction.DOWN).getY() - 16;
+			y = getSolid(Direction.DOWN, false).getY() - 16;
 			inJump = false;
 		} else {
 			ySpeed++;
@@ -38,7 +39,7 @@ public class EntityPlayer extends Entity{
 		}
 
 		if (Main.main.keyListener.isPressed(KeyEvent.VK_SPACE)) {
-			if (!inJump && !(getSolid(Direction.UP) instanceof ObstacleWall) && ableSpace) {
+			if (!inJump && !(getSolid(Direction.UP, false) instanceof ObstacleWall) && ableSpace) {
 				this.jump();
 				ableSpace = false;
 			}
@@ -46,7 +47,7 @@ public class EntityPlayer extends Entity{
 			ableSpace = true;
 		}
 
-		if (inJump && getSolid(Direction.UP) instanceof ObstacleWall) {
+		if (inJump && getSolid(Direction.UP, false) instanceof ObstacleWall) {
 			if (ySpeed < 0) {
 				ySpeed = 0;
 			}
@@ -82,7 +83,7 @@ public class EntityPlayer extends Entity{
 			checkBump(Direction.LEFT);
 		}
 		
-		for (Obstacle obs : this.getCollisions()) {
+		for (Obstacle obs : this.getCollisions(true)) {
 			if (obs instanceof ObstacleFinish) {
 				game.switchLevel();
 				return;
@@ -90,24 +91,26 @@ public class EntityPlayer extends Entity{
 		}
 	}
 
-	private List<Obstacle> getCollisions() {
+	private List<Obstacle> getCollisions(boolean standing) {
 		List<Obstacle> list = new CopyOnWriteArrayList<Obstacle>();
 		for(Direction dir : Direction.values()) {
-			if (getSolid(dir) != null) {
-				list.add(getSolid(dir));
+			if (getSolid(dir, standing) != null) {
+				list.add(getSolid(dir, standing));
 			}
 		}
 		return list;
 	}
 
 	private void checkBump(Direction direction) {
-		if (getSolid(direction) instanceof ObstacleWall) {
+		//if (getSolid(direction) instanceof ObstacleWall && !(getSolid(Direction.UP) instanceof ObstacleWall)) {
+		Obstacle obs = getSolid(direction, false);
+		if (obs instanceof ObstacleWall ) {
 			xSpeed = 0;
 
 			if (direction == Direction.LEFT) {
-				this.x = getSolid(direction).getX() + 16;
+				this.x = obs.getX() + 16;
 			} else if (direction == Direction.RIGHT) {
-				this.x = getSolid(direction).getX() - 16;
+				this.x = obs.getX() - 16;
 			}
 		}
 	}
@@ -117,8 +120,8 @@ public class EntityPlayer extends Entity{
 		inJump = true;
 	}
 
-	private Obstacle getSolid(Direction direction) {
-		return game.getSolid(x,y, direction);
+	private Obstacle getSolid(Direction direction, boolean standing) {
+		return game.getSolid(x,y, direction, standing);
 
 	}
 

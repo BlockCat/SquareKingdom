@@ -49,7 +49,7 @@ public class GUIGame extends GUI {
 		try {
 			this.loadLevel(1);
 		} catch (Exception e) {
-			main.changeScreen("game_over", new GuiGameOver(main));
+			main.changeScreen("game_over", new GuiGameOver(main), true);
 		}
 	}
 
@@ -62,30 +62,53 @@ public class GUIGame extends GUI {
 		return false;
 	}
 
-
-	public Obstacle getSolid(int x, int y, Direction direction) {
+	public Obstacle getSolid(int x, int y, Direction direction, boolean standing) {
 		if (direction == Direction.DOWN) {
 			for (Obstacle ob : obstacles) {
-				if(ob.inObject(x + 1, y + 20) || ob.inObject(x + 15, y + 20)) {
-					return ob;
+				if (standing) {
+					if(ob.inObject(x + 1, y + 20) && ob.inObject(x + 15, y + 20)) {
+						return ob;
+					}
+				} else {
+					if(ob.inObject(x + 1, y + 20) || ob.inObject(x + 15, y + 20)) {
+						return ob;
+					}
 				}
 			}
 		} else if (direction == Direction.UP) {
 			for (Obstacle ob : obstacles) {
-				if(ob.inObject(x + 1, y - 4) || ob.inObject(x + 15,  y - 4)) {
-					return ob;
+				if (standing) {
+					if(ob.inObject(x + 1, y - 4) && ob.inObject(x + 15,  y - 4)) {
+						return ob;
+					}
+				} else {
+					if(ob.inObject(x + 1, y - 4) || ob.inObject(x + 15,  y - 4)) {
+						return ob;
+					}
 				}
 			}
 		} else if (direction == Direction.LEFT) {
 			for (Obstacle ob : obstacles) {
-				if(ob.inObject(x - 4, y + 1) || ob.inObject(x - 4, y + 15)) {
-					return ob;
+				if (standing) {
+					if(ob.inObject(x - 4, y + 2) && ob.inObject(x - 4, y + 15)) {
+						return ob;
+					}
+				} else {
+					if(ob.inObject(x - 4, y + 2) || ob.inObject(x - 4, y + 15)) {
+						return ob;
+					}	
 				}
 			}
 		} else if (direction == Direction.RIGHT) {
 			for (Obstacle ob : obstacles) {
-				if(ob.inObject(x + 20, y + 1) || ob.inObject(x + 20, y + 15)) {
-					return ob;
+				if (standing) {
+					if(ob.inObject(x + 20, y + 2) && ob.inObject(x + 20, y + 15)) {
+						return ob;
+					}
+				} else {
+					if(ob.inObject(x + 20, y + 2) || ob.inObject(x + 20, y + 15)) {
+						return ob;
+					}
 				}
 			}
 		}
@@ -99,7 +122,7 @@ public class GUIGame extends GUI {
 		try {
 			this.loadLevel(level);
 		} catch(Exception e) {
-			main.changeScreen("game_over", new GuiGameOver(main));
+			main.changeScreen("game_over", new GuiGameOver(main), true);
 		}
 	}
 
@@ -156,7 +179,7 @@ public class GUIGame extends GUI {
 	@Override
 	public void update() {
 		if (main.keyListener.isPressed(KeyEvent.VK_ESCAPE)) {
-			main.changeScreen("main", new GUIMainMenu(main));
+			main.changeScreen("main", new GUIMainMenu(main), false);
 		}
 		for (Entity ent : entities) {
 			ent.move();
