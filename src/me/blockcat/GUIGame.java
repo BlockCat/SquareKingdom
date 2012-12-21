@@ -1,11 +1,15 @@
 package me.blockcat;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.imageio.ImageIO;
 
 import me.blockcat.Entity.Entity;
 import me.blockcat.Entity.EntityPlayer;
@@ -18,11 +22,19 @@ public class GUIGame extends GUI {
 	private Main main;
 	private List<Entity> entities = new CopyOnWriteArrayList<Entity>();
 	private List<Obstacle> obstacles = new CopyOnWriteArrayList<Obstacle>();
+	private Image backgroundImage = null;
 	private Camera camera;
 
 	public GUIGame(Main main) {
 		this.main = main;
 		camera = new Camera(this);
+		
+		try {
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream("resources/images/background.png");
+			backgroundImage = ImageIO.read(in); 
+		} catch (Exception e) {
+			
+		}
 	}
 
 	@Override
@@ -103,6 +115,11 @@ public class GUIGame extends GUI {
 
 	@Override
 	public void render(Graphics2D g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		g.drawImage(backgroundImage, 0, 0, null);
+		
 		camera.renderFore(g);
 	}
 
@@ -122,9 +139,4 @@ public class GUIGame extends GUI {
 		}
 		camera.update(player);
 	}
-
-
-
-
-
 }

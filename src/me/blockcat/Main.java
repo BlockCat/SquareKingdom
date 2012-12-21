@@ -132,8 +132,8 @@ public class Main extends JFrame implements Runnable{
 			g = (Graphics2D) strategy.getDrawGraphics();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
+			//g.setColor(Color.BLACK);
+			//g.fillRect(0, 0, WIDTH, HEIGHT);
 			
 			if (currentScreen != null) {
 				currentScreen.render(g);

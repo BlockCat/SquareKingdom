@@ -58,24 +58,27 @@ public class EntityPlayer extends Entity{
 			} else {
 				xSpeed = -5;
 			}
-			checkBump(Direction.LEFT);
 		} else if (Main.main.keyListener.isPressed(KeyEvent.VK_D)) {
 			if (xSpeed <= 5) {
 				xSpeed++;
 			} else {
 				xSpeed = 5;
 			}
-			checkBump(Direction.RIGHT);
 
 		} else {
 			if (xSpeed > 0) {
 				xSpeed -= 0.5;
-				checkBump(Direction.RIGHT);
+				
 			} else if (xSpeed < 0) {
 				xSpeed += 0.5;
-				checkBump(Direction.LEFT);
+				
 			}
-		}		
+		}
+		if (xSpeed > 0) {
+			checkBump(Direction.RIGHT);
+		} else {
+			checkBump(Direction.LEFT);
+		}
 	}
 
 	private void checkBump(Direction direction) {
@@ -104,6 +107,7 @@ public class EntityPlayer extends Entity{
 	public void render(int x, int y, Graphics2D g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(x, y, 16, 16);
+		g.fill3DRect(x, y, 16, 16, true);
 	}
 
 }

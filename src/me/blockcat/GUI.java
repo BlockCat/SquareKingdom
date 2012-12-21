@@ -8,8 +8,10 @@ import me.blockcat.GUIs.GuiButton;
 
 public abstract class GUI {
 	
-	protected List<GuiButton> elements = new ArrayList<GuiButton>();
+	public final int WIDTH = 640;
+	public final int HEIGHT = 480;
 	private int count = 0;
+	protected List<GuiButton> elements = new ArrayList<GuiButton>();
 	
 	public abstract void initiate();
 	public abstract void render(Graphics2D g);
