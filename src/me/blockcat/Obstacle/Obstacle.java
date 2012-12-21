@@ -34,4 +34,6 @@ public class Obstacle {
 		return y;
 	}
 
+	
+
 }

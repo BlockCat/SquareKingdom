@@ -3,9 +3,9 @@ package me.blockcat;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.blockcat.Entity.Entity;
 import me.blockcat.Entity.EntityPlayer;
@@ -16,8 +16,8 @@ public class GUIGame extends GUI {
 
 	public Entity player = null;
 	private Main main;
-	private List<Entity> entities = new ArrayList<Entity>();
-	private List<Obstacle> obstacles = new ArrayList<Obstacle>();
+	private List<Entity> entities = new CopyOnWriteArrayList<Entity>();
+	private List<Obstacle> obstacles = new CopyOnWriteArrayList<Obstacle>();
 	private Camera camera;
 
 	public GUIGame(Main main) {
@@ -40,7 +40,6 @@ public class GUIGame extends GUI {
 				return true;
 			}
 		}
-
 		return false;
 	}
 	
@@ -74,16 +73,6 @@ public class GUIGame extends GUI {
 		return null;
 	}
 
-
-	public int getTopAt(int x, int y) {
-		for (Obstacle ob : obstacles) {
-			if(ob.inObject(x, y)) {
-				return ob.getY();
-			}
-		}
-		return -404534909;
-	}
-
 	public void loadLevel(int level) {
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream("resources/level/" + level + ".level");
 		Scanner scanner = new Scanner(in);
@@ -114,16 +103,7 @@ public class GUIGame extends GUI {
 
 	@Override
 	public void render(Graphics2D g) {
-		camera.renderBack(g);
 		camera.renderFore(g);
-		/*for (Entity ent : entities) {
-			ent.render(g);
-		}
-
-		for (Obstacle obs : obstacles) {
-			obs.render(g);
-		}*/
-
 	}
 
 	@Override
@@ -134,13 +114,13 @@ public class GUIGame extends GUI {
 
 	@Override
 	public void update() {
-		camera.update(player);
 		if (main.keyListener.isPressed(KeyEvent.VK_ESCAPE)) {
 			main.changeScreen("main", new GUIMainMenu(main));
 		}
 		for (Entity ent : entities) {
 			ent.move();
 		}
+		camera.update(player);
 	}
 
 
