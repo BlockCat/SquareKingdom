@@ -3,11 +3,14 @@ package me.blockcat.Entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.blockcat.Direction;
 import me.blockcat.GUIGame;
 import me.blockcat.Main;
 import me.blockcat.Obstacle.Obstacle;
+import me.blockcat.Obstacle.ObstacleFinish;
 import me.blockcat.Obstacle.ObstacleWall;
 
 public class EntityPlayer extends Entity{
@@ -68,10 +71,9 @@ public class EntityPlayer extends Entity{
 		} else {
 			if (xSpeed > 0) {
 				xSpeed -= 0.5;
-				
+
 			} else if (xSpeed < 0) {
-				xSpeed += 0.5;
-				
+				xSpeed += 0.5;				
 			}
 		}
 		if (xSpeed > 0) {
@@ -79,6 +81,23 @@ public class EntityPlayer extends Entity{
 		} else {
 			checkBump(Direction.LEFT);
 		}
+		
+		for (Obstacle obs : this.getCollisions()) {
+			if (obs instanceof ObstacleFinish) {
+				game.switchLevel();
+				return;
+			}
+		}
+	}
+
+	private List<Obstacle> getCollisions() {
+		List<Obstacle> list = new CopyOnWriteArrayList<Obstacle>();
+		for(Direction dir : Direction.values()) {
+			if (getSolid(dir) != null) {
+				list.add(getSolid(dir));
+			}
+		}
+		return list;
 	}
 
 	private void checkBump(Direction direction) {
