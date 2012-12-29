@@ -20,11 +20,11 @@ public class Main extends JFrame implements Runnable{
 	public static Main main;
 	public final int WIDTH = 640;
 	public final int HEIGHT = 480;
-	public GUI currentScreen = null;
+	public Gui currentScreen = null;
 	private boolean running = false;
 	public GameKeyListener keyListener;
 	public GameMouseListener mouseListener;
-	private HashMap<String, GUI> screens = new HashMap<String, GUI>();
+	private HashMap<String, Gui> screens = new HashMap<String, Gui>();
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -54,7 +54,7 @@ public class Main extends JFrame implements Runnable{
 		this.addKeyListener(keyListener);
 		this.addMouseListener(mouseListener);
 		
-		this.changeScreen("main", new GUIMainMenu(this), true);
+		this.changeScreen("main", new GuiMainMenu(this), true);
 
 		/** running = true */
 		this.running = true;
@@ -109,7 +109,7 @@ public class Main extends JFrame implements Runnable{
         System.exit(0);
     }
 	
-	public void changeScreen(String name, GUI screen, boolean newScreen) {
+	public void changeScreen(String name, Gui screen, boolean newScreen) {
 		if (newScreen) {
 			currentScreen = screen;
 			currentScreen.initiate();

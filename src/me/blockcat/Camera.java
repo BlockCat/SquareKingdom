@@ -27,28 +27,28 @@ public class Camera {
 
 	private synchronized List<Obstacle> getViewableObstacles() {
 		List<Obstacle> list = new ArrayList<Obstacle>();
-		/*for (Obstacle obs : game.getObstacles()) {
-			if (obs.getX() >= this.x - 20 && obs.getX() <= this.x + WIDTH) {
-				if (obs.getY() >= y - 20 && obs.getY() <= y + HEIGHT) {
+		for (Obstacle obs : game.getObstacles()) {
+			if (obs.getX() >= (x * -1) - 20 && obs.getX() <= (x * -1) + WIDTH) {
+				if (obs.getY() >= (y * -1) - 20 && obs.getY() <= (y * -1) + HEIGHT) {
 					list.add(obs);
 				}
 			}
-		}*/
-		return game.getObstacles();
-		//return list;
+		}
+		//return game.getObstacles();
+		return list;
 	}
 
 	private synchronized List<Entity> getViewableEntities() {
 		List<Entity> list = new ArrayList<Entity>();
-		/*for (Entity ent : game.getEntities()) {
-			if (ent.getX() >= x - 20 && ent.getX() <= x + WIDTH) {
-				if (ent.getY() >= y - 20 && ent.getY() <= y + HEIGHT) {
+		for (Entity ent : game.getEntities()) {
+			if (ent.getX() >= (x * -1) - 20 && ent.getX() <= (x * -1) + WIDTH) {
+				if (ent.getY() >= (y * -1) - 20 && ent.getY() <= (y * -1) + HEIGHT) {
 					list.add(ent);					
 				}
 			}
-		}*/
-		return game.getEntities();
-		//return list;
+		}
+		//return game.getEntities();
+		return list;
 	}
 
 	public synchronized void update(Entity player) {
@@ -61,7 +61,7 @@ public class Camera {
 		viewableEnts  = this.getViewableEntities();
 	}
 
-	public synchronized void renderFore(Graphics2D g) {
+	public synchronized void render(Graphics2D g) {
 		
 		Iterator<Obstacle> it = this.viewableObs.iterator();
 		while(it.hasNext()) {

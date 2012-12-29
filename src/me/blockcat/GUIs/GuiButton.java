@@ -9,25 +9,17 @@ import me.blockcat.Main;
 public class GuiButton {
 
 	
-	private int x = 0;
-	private int y = 0;
+	protected int x = 0;
+	protected int y = 0;
 	private int width = 300;
 	private int height = 50;	
 	private int id;
 	private Color color = Color.WHITE;
-	private String message = "";
+	protected String message = "";
 	
 	public GuiButton(int x, int y, String message) {
 		this.x = x;
 		this.y = y;
-		this.message = message;
-	}
-	
-	public GuiButton(int x, int y, int width, int height, String message) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;				
 		this.message = message;
 	}
 	

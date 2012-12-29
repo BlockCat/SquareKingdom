@@ -6,12 +6,14 @@ import java.awt.event.KeyEvent;
 
 import me.blockcat.GUIs.GuiButton;
 
-public class GuiGameOver extends GUI {
+public class GuiGameOver extends Gui {
 
 	private Main main;
+	private boolean dead = false;
 
-	public GuiGameOver(Main main) {
+	public GuiGameOver(Main main, boolean dead) {
 		this.main = main;
+		this.dead = dead;
 	}
 
 	@Override
@@ -22,17 +24,16 @@ public class GuiGameOver extends GUI {
 
 	@Override
 	public void render(Graphics2D g) {
-		/** background */
-		g.setColor(new Color(52, 52, 52));
-		g.fillRect(0, 0, main.WIDTH, main.HEIGHT);
-		
-		g.setColor(Color.WHITE);
-		g.setFont(Main.gameFont.deriveFont(60.0F));
-		g.drawString("Game Over!", 160, 200);
-		
-		/** draw the rest. */
-		for (GuiButton element : elements) {
-			element.render(g);
+		super.render(g);
+
+		if (dead) {
+			g.setColor(Color.WHITE);
+			g.setFont(Main.gameFont.deriveFont(60.0F));
+			g.drawString("Game Over!", 160, 200);
+		} else {
+			g.setColor(Color.WHITE);
+			g.setFont(Main.gameFont.deriveFont(60.0F));
+			g.drawString("You have won the game!", 160, 200);
 		}
 	}
 
@@ -40,7 +41,7 @@ public class GuiGameOver extends GUI {
 	protected void executeButton(int id) {
 		switch(id) {
 		case 0: 
-			main.changeScreen("main", new GUIMainMenu(main), true);
+			main.changeScreen("main", new GuiMainMenu(main), true);
 			break;
 		case 1:
 			main.stop();

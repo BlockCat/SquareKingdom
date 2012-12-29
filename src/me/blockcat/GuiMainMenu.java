@@ -10,19 +10,18 @@ import javax.imageio.ImageIO;
 
 import me.blockcat.GUIs.GuiButton;
 
-public class GUIMainMenu extends GUI {
+public class GuiMainMenu extends Gui {
 	
 	private Main main;
 	private Image title = null;
 
-	public GUIMainMenu (Main main) {
+	public GuiMainMenu (Main main) {
 		this.main = main;
 	}
 
 	@Override
 	public void initiate() {
-		this.add(new GuiButton(160, 240, "Start game!"));
-		this.add(new GuiButton(160, 300, "Resume!"));
+		this.add(new GuiButton(160, 300, "Start game!"));
 		this.add(new GuiButton(160, 360, "Quit!"));
 		try {
 			URL url = this.getClass().getClassLoader().getResource("resources/images/Title.png");
@@ -35,15 +34,9 @@ public class GUIMainMenu extends GUI {
 
 	@Override
 	public void render(Graphics2D g) {
-		/** background */
-		g.setColor(new Color(52, 52, 52));
-		g.fillRect(0, 0, main.WIDTH, main.HEIGHT);
-		
+		super.render(g);
 		/** draw the rest. */
 		g.drawImage(title , 0, 0, null);
-		for (GuiButton element : elements) {
-			element.render(g);
-		}
 	}
 
 	@Override
@@ -51,12 +44,9 @@ public class GUIMainMenu extends GUI {
 		switch(id) {
 		case 0: 
 			System.out.println("started game!");
-			main.changeScreen("game", new GUIGame(main), true);
+			main.changeScreen("tutorial", new GuiTutorial(main), true);
 			break;
 		case 1:
-			main.changeScreen("game", new GUIGame(main), false);
-			break;
-		case 2:
 			main.stop();
 		}
 	}

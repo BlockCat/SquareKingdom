@@ -1,10 +1,8 @@
 package me.blockcat;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
@@ -14,27 +12,37 @@ import javax.imageio.ImageIO;
 
 import me.blockcat.Entity.Entity;
 import me.blockcat.Entity.EntityPlayer;
+import me.blockcat.GUIs.GuiButton;
+import me.blockcat.GUIs.GuiButtonSmall;
 import me.blockcat.Obstacle.Obstacle;
 import me.blockcat.Obstacle.ObstacleFinish;
 import me.blockcat.Obstacle.ObstacleWall;
 
-public class GUIGame extends GUI {
+public class GUIGame extends Gui {
 
 	public Entity player = null;
 	private int level = 1;
+	private int lives = 4;
 	private Main main;	
 	private List<Entity> entities = new CopyOnWriteArrayList<Entity>();
 	private List<Obstacle> obstacles = new CopyOnWriteArrayList<Obstacle>();
 	private Image backgroundImage = null;
+	private Image barImage = null;
+	private Image liveImage = null;
 	private Camera camera;
+
 
 	public GUIGame(Main main) {
 		this.main = main;
 		camera = new Camera(this);
 
 		try {
-			InputStream in = this.getClass().getClassLoader().getResourceAsStream("resources/images/background.png");
-			backgroundImage = ImageIO.read(in); 
+			InputStream in1 = this.getClass().getClassLoader().getResourceAsStream("resources/images/background.png");
+			InputStream in2 = this.getClass().getClassLoader().getResourceAsStream("resources/images/bar.png");
+			InputStream in3 = this.getClass().getClassLoader().getResourceAsStream("resources/images/bar/live.png");
+			backgroundImage = ImageIO.read(in1); 
+			barImage = ImageIO.read(in2);
+			liveImage = ImageIO.read(in3);
 		} catch (Exception e) {
 
 		}
@@ -46,10 +54,12 @@ public class GUIGame extends GUI {
 			obstacles.add(new ObstacleWall(x * 32, 400));
 		}
 		obstacles.add(new ObstacleWall(7*32, 400-16));*/
+		this.add(new GuiButtonSmall(10, 430, "Menu"));
+		
 		try {
 			this.loadLevel(1);
 		} catch (Exception e) {
-			main.changeScreen("game_over", new GuiGameOver(main), true);
+			main.changeScreen("main", new GuiMainMenu(main), true);
 		}
 	}
 
@@ -122,7 +132,7 @@ public class GUIGame extends GUI {
 		try {
 			this.loadLevel(level);
 		} catch(Exception e) {
-			main.changeScreen("game_over", new GuiGameOver(main), true);
+			main.changeScreen("game_over", new GuiGameOver(main, false), true);
 		}
 	}
 
@@ -162,24 +172,37 @@ public class GUIGame extends GUI {
 
 	@Override
 	public void render(Graphics2D g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		//super.render(g);
 
 		g.drawImage(backgroundImage, 0, 0, null);
 
-		camera.renderFore(g);
+		camera.render(g);
+		
+		g.drawImage(barImage, 0, 420, null);
+		for (int i = 0; i < lives; i ++) {
+//			g.drawImage(liveImage, 20, 20, null);
+			g.fillRect(600 - (i * 40), 440, 24, 24);
+			g.fill3DRect(600 - (i * 40), 440, 24, 24, true);
+		}
+		
+		for (GuiButton element : elements) {
+			element.render(g);
+		}	
 	}
 
 	@Override
 	protected void executeButton(int id) {
-		// TODO Auto-generated method stub
+		switch(id) {
+		case 0: 
+			main.changeScreen("main", new GuiMainMenu(main), true);
+		}
 
 	}
 
 	@Override
 	public void update() {
 		if (main.keyListener.isPressed(KeyEvent.VK_ESCAPE)) {
-			main.changeScreen("main", new GUIMainMenu(main), false);
+			main.changeScreen("main", new GuiMainMenu(main), false);
 		}
 		for (Entity ent : entities) {
 			ent.move();
