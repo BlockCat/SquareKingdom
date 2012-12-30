@@ -2,7 +2,6 @@ package me.blockcat.Entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -12,6 +11,7 @@ import me.blockcat.GUIGame;
 import me.blockcat.Main;
 import me.blockcat.Obstacle.Obstacle;
 import me.blockcat.Obstacle.ObstacleFinish;
+import me.blockcat.Obstacle.ObstacleHurt;
 import me.blockcat.Obstacle.ObstacleWall;
 
 public class EntityPlayer extends Entity{
@@ -19,6 +19,8 @@ public class EntityPlayer extends Entity{
 	private boolean inJump = false;
 	private boolean ableSpace = true;
 	private GUIGame game;
+	private Object inv;
+	private boolean invincible;
 
 	public EntityPlayer(int x, int y, GUIGame game) {
 		super(x, y);
@@ -28,6 +30,8 @@ public class EntityPlayer extends Entity{
 	@Override
 	public void move() {
 		super.move();
+		
+		
 
 		if (getSolid(Direction.DOWN, false) instanceof ObstacleWall) {// if standing on wall
 			ySpeed = 0;
@@ -87,6 +91,14 @@ public class EntityPlayer extends Entity{
 			if (obs instanceof ObstacleFinish) {
 				game.switchLevel();
 				return;
+			} else if (obs instanceof ObstacleHurt) {
+				if (game.lives > 0) {
+					game.respawn();
+					return;
+				} else {
+					game.dead();
+					return;
+				}
 			}
 		}
 	}
@@ -122,9 +134,8 @@ public class EntityPlayer extends Entity{
 
 	private Obstacle getSolid(Direction direction, boolean standing) {
 		return game.getSolid(x,y, direction, standing);
-
 	}
-
+	
 	@Override
 	public void render(int x, int y, Graphics2D g) {
 		g.setColor(Color.WHITE);

@@ -33,10 +33,10 @@ public class GuiGameOver extends Gui {
 		} else {
 			g.setColor(Color.WHITE);
 			g.setFont(Main.gameFont.deriveFont(60.0F));
-			g.drawString("You have won the game!", 160, 200);
+			g.drawString("You have won!", 160, 200);
 		}
-	}
 
+	}
 	@Override
 	protected void executeButton(int id) {
 		switch(id) {

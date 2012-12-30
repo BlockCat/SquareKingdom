@@ -16,13 +16,14 @@ import me.blockcat.GUIs.GuiButton;
 import me.blockcat.GUIs.GuiButtonSmall;
 import me.blockcat.Obstacle.Obstacle;
 import me.blockcat.Obstacle.ObstacleFinish;
+import me.blockcat.Obstacle.ObstacleHurt;
 import me.blockcat.Obstacle.ObstacleWall;
 
 public class GUIGame extends Gui {
 
-	public Entity player = null;
+	public int lives = 4;
+	public EntityPlayer player = null;
 	private int level = 1;
-	private int lives = 4;
 	private Main main;	
 	private List<Entity> entities = new CopyOnWriteArrayList<Entity>();
 	private List<Obstacle> obstacles = new CopyOnWriteArrayList<Obstacle>();
@@ -55,7 +56,7 @@ public class GUIGame extends Gui {
 		}
 		obstacles.add(new ObstacleWall(7*32, 400-16));*/
 		this.add(new GuiButtonSmall(10, 430, "Menu"));
-		
+
 		try {
 			this.loadLevel(1);
 		} catch (Exception e) {
@@ -144,15 +145,25 @@ public class GUIGame extends Gui {
 			while(scanner.hasNextLine()) {
 				String scan = scanner.nextLine();
 				for(int i = 0; i < scan.length(); i++) {
-					if (scan.charAt(i) == 'X') {
+					switch(scan.charAt(i)) {
+					case 'X':
 						obstacles.add(new ObstacleWall(i * 16, line * 16));
-					} else if (scan.charAt(i) == 'O') {
-						System.out.println("player created at: " + i*16 + ":" + line*16);
+						break;
+					case 'O':
 						player = new EntityPlayer(i * 16, line * 16, this);
 						entities.add(player);
-					} else if (scan.charAt(i) == 'F') {
-						obstacles.add(new ObstacleFinish(i * 16, line * 16));	
-					}				
+						break;
+					case 'H':
+						obstacles.add(new ObstacleHurt(i * 16, line * 16, true));
+						break;
+					case 'B':
+						obstacles.add(new ObstacleHurt(i * 16, line * 16, false));
+						break;
+					case 'F':
+						obstacles.add(new ObstacleFinish(i * 16, line * 16));
+						break;
+					}
+
 				}
 				line++;
 			}
@@ -177,12 +188,13 @@ public class GUIGame extends Gui {
 		g.drawImage(backgroundImage, 0, 0, null);
 
 		camera.render(g);
-		
+
 		g.drawImage(barImage, 0, 420, null);
-		for (int i = 0; i < lives; i ++) {
-//			g.drawImage(liveImage, 20, 20, null);
-			g.fillRect(600 - (i * 40), 440, 24, 24);
-			g.fill3DRect(600 - (i * 40), 440, 24, 24, true);
+		if (player != null) {
+			for (int i = 0; i < lives; i ++) {
+				g.fillRect(600 - (i * 40), 440, 24, 24);
+				g.fill3DRect(600 - (i * 40), 440, 24, 24, true);
+			}
 		}
 		
 		for (GuiButton element : elements) {
@@ -208,5 +220,21 @@ public class GUIGame extends Gui {
 			ent.move();
 		}
 		camera.update(player);
+	}
+
+	public void respawn() {
+		try {
+			entities.remove(player);
+			player = null;			
+			this.loadLevel(level);
+			lives--;
+			//player.setInvincible(false);
+		} catch (Exception e) {
+
+		}
+	}
+
+	public void dead() {
+		main.changeScreen("game_over", new GuiGameOver(main, true), true);
 	}
 }

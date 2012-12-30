@@ -14,7 +14,7 @@ public class ObstacleWall extends Obstacle {
 	public void render(int x, int y, Graphics2D g) {
 		g.setColor(new Color(155,243,61));
 		//g.fillRect(x, y, WIDTH, HEIGHT);
-		g.fill3DRect(x, y, WIDTH, HEIGHT, false);
+		g.fill3DRect(x, y, WIDTH, HEIGHT, true);
 	}
 
 }
