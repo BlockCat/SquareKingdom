@@ -1,5 +1,6 @@
 package me.blockcat;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -105,7 +106,7 @@ public class GUIGame extends Gui {
 						return ob;
 					}
 				} else {
-					if(ob.inObject(x - 4, y + 2) || ob.inObject(x - 4, y + 15)) {
+					if(ob.inObject(x - 4, y + 6) || ob.inObject(x - 4, y + 15)) {
 						return ob;
 					}	
 				}
@@ -117,7 +118,7 @@ public class GUIGame extends Gui {
 						return ob;
 					}
 				} else {
-					if(ob.inObject(x + 20, y + 2) || ob.inObject(x + 20, y + 15)) {
+					if(ob.inObject(x + 20, y + 6) || ob.inObject(x + 20, y + 15)) {
 						return ob;
 					}
 				}
@@ -185,7 +186,9 @@ public class GUIGame extends Gui {
 	public void render(Graphics2D g) {
 		//super.render(g);
 
-		g.drawImage(backgroundImage, 0, 0, null);
+		//g.drawImage(backgroundImage, 0, 0, null);
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(0, 0, 640, 480);
 
 		camera.render(g);
 

@@ -61,13 +61,13 @@ public class EntityPlayer extends Entity{
 			ySpeed = 16;
 		}
 		if (Main.main.keyListener.isPressed(KeyEvent.VK_A)) {
-			if (xSpeed >= -5) {
+			if (xSpeed > -4) {
 				xSpeed--;
 			} else {
 				xSpeed = -5;
 			}
 		} else if (Main.main.keyListener.isPressed(KeyEvent.VK_D)) {
-			if (xSpeed <= 5) {
+			if (xSpeed < 4) {
 				xSpeed++;
 			} else {
 				xSpeed = 5;
@@ -83,7 +83,7 @@ public class EntityPlayer extends Entity{
 		}
 		if (xSpeed > 0) {
 			checkBump(Direction.RIGHT);
-		} else {
+		} else if (xSpeed < 0) {
 			checkBump(Direction.LEFT);
 		}
 		
@@ -115,16 +115,26 @@ public class EntityPlayer extends Entity{
 
 	private void checkBump(Direction direction) {
 		//if (getSolid(direction) instanceof ObstacleWall && !(getSolid(Direction.UP) instanceof ObstacleWall)) {
-		Obstacle obs = getSolid(direction, false);
-		if (obs instanceof ObstacleWall ) {
+		Obstacle obsSide = getSolid(direction, false);
+		Obstacle obsUp = getSolid(Direction.UP, false);
+		
+		double prev = xSpeed;
+		
+		
+		
+		
+		if (obsSide instanceof ObstacleWall ) {
+			
 			xSpeed = 0;
-
+			
 			if (direction == Direction.LEFT) {
-				this.x = obs.getX() + 16;
+				this.x = obsSide.getX() + 16;
 			} else if (direction == Direction.RIGHT) {
-				this.x = obs.getX() - 16;
+				this.x = obsSide.getX() - 16;
 			}
 		}
+		
+		
 	}
 
 	private void jump() {
