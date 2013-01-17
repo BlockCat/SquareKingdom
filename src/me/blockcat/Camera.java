@@ -4,8 +4,6 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import me.blockcat.Entity.Entity;
 import me.blockcat.Obstacle.Obstacle;
 
@@ -17,10 +15,6 @@ public class Camera {
 	private int x = 200;
 	private int y = 200;
 	
-	private List<Obstacle> viewableObs = new CopyOnWriteArrayList<Obstacle>();
-	private List<Entity> viewableEnts = new CopyOnWriteArrayList<Entity>();
-
-
 	public Camera(GUIGame guiGame) {
 		this.game = guiGame;
 	}
@@ -34,7 +28,6 @@ public class Camera {
 				}
 			}
 		}
-		//return game.getObstacles();
 		return list;
 	}
 
@@ -47,7 +40,6 @@ public class Camera {
 				}
 			}
 		}
-		//return game.getEntities();
 		return list;
 	}
 
@@ -57,18 +49,17 @@ public class Camera {
 			y = (player.getY() - (HEIGHT / 2)) * -1;
 		}
 		
-		viewableObs = this.getViewableObstacles();
-		viewableEnts  = this.getViewableEntities();
+		
 	}
 
 	public synchronized void render(Graphics2D g) {
 		
-		Iterator<Obstacle> it = this.viewableObs.iterator();
+		Iterator<Obstacle> it = this.getViewableObstacles().iterator();
 		while(it.hasNext()) {
 			Obstacle obs = it.next();
 			obs.render(x + obs.getX() , y + obs.getY(), g);
 		}
-		Iterator<Entity> entIt = this.viewableEnts.iterator();
+		Iterator<Entity> entIt = this.getViewableEntities().iterator();
 		while(entIt.hasNext()) {
 			Entity ent = entIt.next();
 			ent.render(x + ent.getX(), y + ent.getY(), g);

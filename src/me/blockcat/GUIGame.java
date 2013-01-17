@@ -195,7 +195,6 @@ public class GUIGame extends Gui {
 		g.drawImage(barImage, 0, 420, null);
 		if (player != null) {
 			for (int i = 0; i < lives; i ++) {
-				g.fillRect(600 - (i * 40), 440, 24, 24);
 				g.fill3DRect(600 - (i * 40), 440, 24, 24, true);
 			}
 		}

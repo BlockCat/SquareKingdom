@@ -3,6 +3,7 @@ package me.blockcat;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
@@ -21,11 +22,53 @@ public class Main extends JFrame implements Runnable{
 	public final int WIDTH = 640;
 	public final int HEIGHT = 480;
 	public Gui currentScreen = null;
-	private boolean running = false;
 	public GameKeyListener keyListener;
 	public GameMouseListener mouseListener;
+	private int FPS = 0;
+	private boolean running = false;
 	private HashMap<String, Gui> screens = new HashMap<String, Gui>();
+	
+	private Thread painter = new Thread(new Runnable() {
 
+		@Override
+		public void run() {
+			
+			Graphics2D g = null;
+			Graphics2D bufferGraphics = null;
+			BufferStrategy strategy= getBufferStrategy();
+
+			try {
+				g = (Graphics2D) strategy.getDrawGraphics();
+				bufferGraphics = (Graphics2D) g.create();
+				bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				
+				if (currentScreen != null) {
+					currentScreen.render(bufferGraphics);
+				}
+				
+				drawFPS(bufferGraphics);
+				
+				g = bufferGraphics;
+				
+			} finally {
+				bufferGraphics.dispose();
+				g.dispose();
+			}
+			
+			strategy.show();
+			Toolkit.getDefaultToolkit().sync();				
+		}
+		
+	});
+	private Thread updater = new Thread(new Runnable() {
+
+		@Override
+		public void run() {
+			currentScreen.update();
+		}
+		
+	});
 	public static void main(String[] args) {
 		Main main = new Main();
 		
@@ -53,13 +96,12 @@ public class Main extends JFrame implements Runnable{
 		
 		this.addKeyListener(keyListener);
 		this.addMouseListener(mouseListener);
-		
 		this.changeScreen("main", new GuiMainMenu(this), true);
 
 		/** running = true */
 		this.running = true;
-		InputStream is = this.getClass().getClassLoader()
-				.getResourceAsStream("resources/font.ttf");
+		
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("resources/font.ttf");
 		try {
 			Font f = Font.createFont(Font.TRUETYPE_FONT, is);
 			gameFont = f.deriveFont(14.0F);
@@ -78,7 +120,9 @@ public class Main extends JFrame implements Runnable{
 
 		//Target FPS
 		long lastLoop = System.currentTimeMillis();
-		final long OPTIMAL_TIME = 1000000000 / 60;   
+		final long OPTIMAL_TIME = 1000000000 / 60; 
+		
+		
 
 		while(running) {
 
@@ -89,13 +133,15 @@ public class Main extends JFrame implements Runnable{
 			lastFps += updateTime;
 			FPS++;
 			if(lastFps >= 1000){
-				System.out.println("(FPS: "+ FPS +")");
+				this.FPS = FPS;
 				lastFps = 0;
 				FPS = 0;
 			}
 
-			this.updateGame();
-			this.paintGame();
+			//this.updateGame();
+			//this.paintGame();
+			updater.run();
+			painter.run();
 
 			try {
 				Thread.sleep((lastLoop - System.currentTimeMillis() + OPTIMAL_TIME) /1000000 );
@@ -129,33 +175,11 @@ public class Main extends JFrame implements Runnable{
 	public void mouseClick(int x, int y) {
 		currentScreen.mouseClick(x, y);
 	}
-
-	public void paintGame() {
-		Graphics2D g = null;
-		BufferStrategy strategy= this.getBufferStrategy();
-
-		try {
-			g = (Graphics2D) strategy.getDrawGraphics();
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			
-			//g.setColor(Color.BLACK);
-			//g.fillRect(0, 0, WIDTH, HEIGHT);
-			
-			if (currentScreen != null) {
-				currentScreen.render(g);
-			}
-			
-			
-		} finally {
-			g.dispose();
-		}
-		
-		strategy.show();
-		Toolkit.getDefaultToolkit().sync();
-	}
-
-	public void updateGame() {
-		currentScreen.update();
+	
+	public void drawFPS(Graphics2D g) {
+		g.setColor(Color.WHITE);
+		g.setFont(Main.gameFont.deriveFont(20.0F));
+		g.drawString("" + this.FPS + "", 600, 20);
 	}
 
 }
